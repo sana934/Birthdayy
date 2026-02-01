@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Farha Ahmed</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: #0a0510; /* Deep Midnight Purple */
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Ambient Purple Background */
+        .bg-garden {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2e104a 0%, #0a0510 100%);
+            z-index: -1;
+        }
+
+        /* Glass Card with Purple Tint */
+        .lily-card {
+            background: rgba(147, 51, 234, 0.07);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 45px;
+            padding: 40px 25px;
+            width: 330px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 30px rgba(147, 51, 234, 0.2);
+        }
+
+        /* Photo Frame with Lily Glow */
+        .photo-frame {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 3px solid #a855f7; /* Purple border */
+            padding: 5px;
+            display: none; /* Hidden at first */
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+            animation: fadeIn 1.2s forwards;
+        }
+
+        .photo-frame img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Text Effects */
+        .msg-reveal { display: none; opacity: 0; }
+        .purple-glow { color: #d8b4fe; text-shadow: 0 0 10px #a855f7; }
+        
+        #locked-content { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Timer Styling */
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .t-box {
+            background: rgba(168, 85, 247, 0.15);
+            padding: 10px 4px;
+            border-radius: 15px;
+            border: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        .t-num { font-size: 1.2rem; font-weight: bold; display: block; }
+        .t-lab { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #d8b4fe; }
+
+        /* Floating Lily Petals */
+        .petal {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.6;
+            animation: drift 6s linear forwards;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="bg-garden"></div>
+
+<div class="lily-card" id="card" onclick="revealBirthday()">
+    
+    <div id="locked-content">
+        <div style="font-size: 60px; margin-bottom: 10px;">🪻</div>
+        <h2 style="font-weight: 200; letter-spacing: 3px;">Farha Ahmed</h2>
+        <p style="font-size: 10px; opacity: 0.6; letter-spacing: 2px;">TAP TO OPEN HER GARDEN</p>
+    </div>
+
+    <div id="surprise" class="msg-reveal">
+        <div class="photo-frame" id="frame">
+            <img src="farha.jpg" alt="Farha" onerror="this.src='https://via.placeholder.com/150?text=Farha'">
+        </div>
+        
+        <h2 class="purple-glow">Advance Happy Birthday Cutieee ❤️❤️❤️</h2>
+        <p style="font-size: 14px; line-height: 1.6;">May Allah bless you with a lot of happiness and beautiful moments.</p>
+
+        <div class="timer-grid">
+            <div class="t-box"><span id="d" class="t-num">0</span><span class="t-lab">Days</span></div>
+            <div class="t-box"><span id="h" class="t-num">0</span><span class="t-lab">Hrs</span></div>
+            <div class="t-box"><span id="m" class="t-num">0</span><span class="t-lab">Min</span></div>
+            <div class="t-box"><span id="s" class="t-num">0</span><span class="t-lab">Sec</span></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function revealBirthday() {
+        document.getElementById('locked-content').style.display = 'none';
+        const surprise = document.getElementById('surprise');
+        surprise.style.display = 'block';
+        setTimeout(() => { 
+            surprise.style.opacity = '1'; 
+            document.getElementById('frame').style.display = 'block';
+        }, 50);
+
+        document.getElementById('card').style.transform = "scale(1.02)";
+        document.getElementById('card').style.borderColor = "rgba(168, 85, 247, 0.6)";
+        
+        // Start floating lilies
+        setInterval(spawnPetal, 400);
+    }
+
+    // Countdown Logic
+    const bday = new Date("Feb 5, 2026 00:00:00").getTime();
+    function update() {
+        const now = new Date().getTime();
+        const diff = bday - now;
+        document.getElementById('d').innerText = Math.floor(diff / 86400000);
+        document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000);
+        document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('s').innerText = Math.floor((diff % 60000) / 1000);
+    }
+    setInterval(update, 1000);
+    update();
+
+    // Floating Lily Petals Effect
+    function spawnPetal() {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        // Using purple flower emojis as petals
+        const icons = ['🪻', '🌸', '✨', '💜']; 
+        petal.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.top = '-5vh';
+        petal.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        petal.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        document.body.appendChild(petal);
+        setTimeout(() => petal.remove(), 6000);
+    }
+</script>
+
+</body>
+</html>
